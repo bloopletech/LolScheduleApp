@@ -3,6 +3,7 @@ package net.bloople.lolschedule
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -50,7 +51,9 @@ class Match(
     val team_2_logo: String? = null,
     val player_1: String? = null,
     val player_2: String? = null,
-    val vods: List<String>? = ArrayList()
+    val vods: List<String> = ArrayList(),
+    @Transient
+    var vodsRevealed: Int = 1
 ) {
     val participant_1: String get() = this.team_1 ?: this.player_1!!
     val participant_1_logo: String? get() = this.team_1_logo

@@ -12,7 +12,7 @@ import android.content.Intent
 import android.net.Uri
 
 
-internal class VodsAdapter(private var vods: List<String>) : RecyclerView.Adapter<VodsAdapter.ViewHolder>() {
+internal class VodsAdapter(private var match: Match) : RecyclerView.Adapter<VodsAdapter.ViewHolder>() {
     private var revealedVods: ArrayList<String> = ArrayList();
 
     override fun getItemId(position: Int): Long {
@@ -21,7 +21,7 @@ internal class VodsAdapter(private var vods: List<String>) : RecyclerView.Adapte
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount(): Int {
-        return Math.min(revealedVods.size + 1, vods.size);
+        return Math.min(revealedVods.size + 1, match.vods.size);
     }
 
     internal inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -38,8 +38,9 @@ internal class VodsAdapter(private var vods: List<String>) : RecyclerView.Adapte
                         startActivity(v.context, browserIntent, null);
                     }
                     REVEAL_VIEW_TYPE -> {
-                        if(adapterPosition < vods.size) {
-                            revealedVods.add(vods.get(adapterPosition));
+                        if(adapterPosition < match.vods.size) {
+                            revealedVods.add(match.vods.get(adapterPosition));
+                            match.vodsRevealed += 1;
                             notifyDataSetChanged();
                         }
                     }
@@ -50,7 +51,7 @@ internal class VodsAdapter(private var vods: List<String>) : RecyclerView.Adapte
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if(position == revealedVods.size && position < vods.size) REVEAL_VIEW_TYPE else VOD_VIEW_TYPE;
+        return if(position == revealedVods.size && position < match.vods.size) REVEAL_VIEW_TYPE else VOD_VIEW_TYPE;
     }
 
     // Create new views (invoked by the layout manager)
@@ -82,7 +83,7 @@ internal class VodsAdapter(private var vods: List<String>) : RecyclerView.Adapte
 
     init {
         setHasStableIds(true);
-        if(!vods.isEmpty()) revealedVods.add(vods.first());
+        repeat(match.vodsRevealed) { revealedVods.add(match.vods[it]); }
     }
 
     companion object {
