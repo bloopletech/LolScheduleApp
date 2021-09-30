@@ -7,9 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.time.ZonedDateTime
 import java.util.ArrayList
-import android.widget.ArrayAdapter
 
-import android.widget.ListView
 import androidx.recyclerview.widget.LinearLayoutManager
 
 
