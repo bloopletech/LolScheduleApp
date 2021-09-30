@@ -9,6 +9,10 @@ import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
+import java.lang.Exception
+import java.net.URL
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -25,9 +29,23 @@ class Schedule(
     val generated: ZonedDateTime,
     val data_generated: ZonedDateTime,
     val streams: List<Stream>,
-    val matches: List<Match>,
+    var matches: List<Match>,
     val logos: List<Logo>
-)
+) {
+    companion object {
+        @JvmStatic
+        fun download(): Schedule {
+            try {
+                val connection = URL("https://lol.bloople.net/data.json").openConnection();
+                return Json.decodeFromStream<Schedule>(connection.getInputStream());
+            }
+            catch(e: Exception) {
+                e.printStackTrace();
+                throw e;
+            }
+        }
+    }
+}
 
 @Serializable
 class Stream(

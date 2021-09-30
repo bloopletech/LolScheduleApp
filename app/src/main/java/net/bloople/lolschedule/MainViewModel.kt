@@ -3,16 +3,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
-import java.lang.Exception
-import java.net.URL
-import java.util.ArrayList
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class MainViewModel(private val application: Application) : AndroidViewModel(application) {
-    private var matches: List<Match> = ArrayList();
+    private lateinit var schedule: Schedule;
 
     private val years: MutableLiveData<List<Int>> = MutableLiveData<List<Int>>();
     private var title: MutableLiveData<String> = MutableLiveData<String>();
@@ -81,27 +76,20 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 //        }
 //    }
     private fun resolve() {
-        searchResults.postValue(matches.filter { it.local_time.year == filterYear });
+        searchResults.postValue(schedule.matches.filter { it.local_time.year == filterYear });
         title.postValue("$filterYear League of Legends eSports Schedule");
     }
 
     fun load() {
         val service: ExecutorService = Executors.newSingleThreadExecutor();
         service.submit {
-            try {
-                val connection = URL("https://lol.bloople.net/data.json").openConnection();
-                val schedule = Json.decodeFromStream<Schedule>(connection.getInputStream());
+            schedule = Schedule.download()
 
-                matches = schedule.matches.sortedBy { match -> match.time };
-                val yearsData = matches.map { match -> match.local_time.year }.distinct().sorted();
-                years.postValue(yearsData);
+            val yearsData = schedule.matches.map { match -> match.local_time.year }.distinct().sorted();
+            years.postValue(yearsData);
 
-                filterYear = yearsData.last();
-                resolve();
-            }
-            catch(e: Exception) {
-                e.printStackTrace();
-            }
+            filterYear = yearsData.last();
+            resolve();
         }
     }
 }
