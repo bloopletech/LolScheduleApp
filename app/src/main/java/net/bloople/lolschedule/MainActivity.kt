@@ -1,5 +1,6 @@
 package net.bloople.lolschedule
 
+import android.app.ProgressDialog
 import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -53,6 +54,19 @@ class MainActivity : AppCompatActivity() {
             matchesView.scrollToPosition(matchesAdapter.itemCount - 1);
         }
         jumpToBottomView.paintFlags = jumpToBottomView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
+
+        var loadingDialog = ProgressDialog.show(
+            this,
+            "Loading schedule",
+            "Please wait while the schedule is loaded...",
+            true);
+
+        model.getSearchResults().observe(this) { matches ->
+            loadingDialog?.let {
+                it.dismiss();
+                loadingDialog = null;
+            }
+        }
 
         model.load();
     }
