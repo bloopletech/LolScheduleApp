@@ -80,7 +80,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 //    }
     private fun resolve() {
         searchResults.postValue(schedule.matches.filter { it.local_time.year == filterYear });
-        title.postValue("$filterYear League of Legends eSports Schedule");
+        title.postValue("$filterYear LoL eSports Schedule");
     }
 
     fun load() {

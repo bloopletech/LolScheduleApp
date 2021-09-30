@@ -1,11 +1,15 @@
 package net.bloople.lolschedule
 
+import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +24,9 @@ class MainActivity : AppCompatActivity() {
 
         model = ViewModelProvider(this).get(MainViewModel::class.java)
 
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
         val yearsView: RecyclerView = findViewById(R.id.years_view);
         val yearsLayoutManager = LinearLayoutManager(this)
         yearsLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
@@ -30,8 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         model.getYears().observe(this) { years -> yearsAdapter.update(years); };
 
-        val titleView: TextView = findViewById(R.id.title);
-        model.getTitle().observe(this) { title -> titleView.text = title };
+        model.getTitle().observe(this) { title -> toolbar.title = title };
 
         val matchesView: RecyclerView = findViewById(R.id.matches_view);
         val matchesLayoutManager = LinearLayoutManager(this)
@@ -78,6 +84,30 @@ class MainActivity : AppCompatActivity() {
         }
 
         model.load();
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu)
+        val inflater = menuInflater
+        inflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(menuItem: MenuItem): Boolean {
+        when(menuItem.itemId) {
+            R.id.info -> {
+                AlertDialog.Builder(this)
+                    .setTitle("Information")
+                    .setMessage("""
+                        League of Legends® and LCS® are registered trademarks of Riot Games, Inc.
+                        This app is not associated with or sponsored by Riot Games, Inc.
+                    """.trimIndent())
+                    .setPositiveButton("OK") { dialogInterface, _ -> dialogInterface.cancel() }
+                    .show();
+            }
+        }
+
+        return true
     }
 
     fun filterYear(year: Int) {
