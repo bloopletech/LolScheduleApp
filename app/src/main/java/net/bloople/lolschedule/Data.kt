@@ -53,13 +53,21 @@ class Match(
     val player_2: String? = null,
     val vods: List<String> = ArrayList(),
     @Transient
-    var vodsRevealed: Int = 1
+    var vodsRevealed: Int = 0
 ) {
     val participant_1: String get() = this.team_1 ?: this.player_1!!
     val participant_1_logo: String? get() = this.team_1_logo
     val participant_2: String get() = this.team_2 ?: this.player_2!!
     val participant_2_logo: String? get() = this.team_2_logo
     val local_time: ZonedDateTime get() = time.withZoneSameInstant(ZoneId.systemDefault())
+
+    init {
+        if(!vods.isEmpty() && vodsRevealed == 0) vodsRevealed = 1;
+    }
+
+    override fun toString(): String {
+        return "League: $league, Participants: $participant_1 vs $participant_2, Time: $local_time";
+    }
 }
 
 @Serializable
