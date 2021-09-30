@@ -1,7 +1,9 @@
 package net.bloople.lolschedule
 
+import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.lifecycle.ViewModelProvider
@@ -39,6 +41,18 @@ class MainActivity : AppCompatActivity() {
         matchesView.adapter = matchesAdapter;
 
         model.getSearchResults().observe(this) { matches -> matchesAdapter.update(matches) };
+
+        val jumpToTopView: TextView = findViewById(R.id.jump_to_top_view);
+        jumpToTopView.setOnClickListener { v: View ->
+            matchesView.scrollToPosition(0);
+        }
+        jumpToTopView.paintFlags = jumpToTopView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
+
+        val jumpToBottomView: TextView = findViewById(R.id.jump_to_bottom_view);
+        jumpToBottomView.setOnClickListener { v: View ->
+            matchesView.scrollToPosition(matchesAdapter.itemCount - 1);
+        }
+        jumpToBottomView.paintFlags = jumpToBottomView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
 
         model.load();
     }
