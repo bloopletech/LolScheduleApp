@@ -43,6 +43,13 @@ class MainActivity : AppCompatActivity() {
 
         model.getSearchResults().observe(this) { matches -> matchesAdapter.update(matches) };
 
+        val jumpToTodayView: TextView = findViewById(R.id.jump_to_today_view);
+        jumpToTodayView.setOnClickListener { v: View ->
+            val firstMatch = matchesAdapter.getMatches().indexOfFirst { match -> match.tags.contains("today-ish") }
+            if(firstMatch >= 0) matchesLayoutManager.scrollToPositionWithOffset(firstMatch, 0);
+        }
+        jumpToTodayView.paintFlags = jumpToTodayView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
+
         val jumpToTopView: TextView = findViewById(R.id.jump_to_top_view);
         jumpToTopView.setOnClickListener { v: View ->
             matchesView.scrollToPosition(0);

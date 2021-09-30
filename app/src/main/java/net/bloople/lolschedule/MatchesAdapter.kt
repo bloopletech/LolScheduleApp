@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 internal class MatchesAdapter : RecyclerView.Adapter<MatchesAdapter.ViewHolder>() {
     private var matches: List<Match> = ArrayList();
-    private var timeRenderer = TimeRenderer()
 
     override fun getItemId(position: Int): Long {
         return position.toLong();
@@ -27,6 +26,10 @@ internal class MatchesAdapter : RecyclerView.Adapter<MatchesAdapter.ViewHolder>(
     fun update(matches: List<Match>) {
         this.matches = matches;
         notifyDataSetChanged();
+    }
+
+    fun getMatches(): List<Match> {
+        return matches;
     }
 
     internal inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -55,7 +58,7 @@ internal class MatchesAdapter : RecyclerView.Adapter<MatchesAdapter.ViewHolder>(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val match: Match = matches[position]
         holder.leagueView.setText(match.league);
-        holder.timeView.setText(timeRenderer.formatDate(match.local_time, ZonedDateTime.now()));
+        holder.timeView.setText(TimeUtils.formatDate(match.local_time, ZonedDateTime.now()));
         holder.participant1View.setText(match.participant_1);
         holder.participant2View.setText(match.participant_2);
 

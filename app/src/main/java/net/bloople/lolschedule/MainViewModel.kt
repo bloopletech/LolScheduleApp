@@ -3,6 +3,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import java.time.ZonedDateTime
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -83,7 +84,10 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     fun load() {
         val service: ExecutorService = Executors.newSingleThreadExecutor();
         service.submit {
-            schedule = Schedule.download()
+            schedule = Schedule.download();
+
+            val now = ZonedDateTime.now();
+            for(match in schedule.matches) MatchTagger(match).tag(now);
 
             val yearsData = schedule.matches.map { match -> match.local_time.year }.distinct().sorted();
             years.postValue(yearsData);

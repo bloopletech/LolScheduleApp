@@ -59,7 +59,7 @@ class Stream(
 @Serializable
 class Match(
     val time: ZonedDateTime,
-    val tags: List<String>,
+    val tags: MutableList<String>,
     val league: String,
     val league_long: String,
     val league_slug: String,
