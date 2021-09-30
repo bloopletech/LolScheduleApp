@@ -1,4 +1,5 @@
 package net.bloople.lolschedule
+
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -6,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import java.time.ZonedDateTime
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+
 
 class MainViewModel(private val application: Application) : AndroidViewModel(application) {
     private lateinit var schedule: Schedule;

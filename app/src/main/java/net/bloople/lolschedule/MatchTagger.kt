@@ -3,6 +3,7 @@ package net.bloople.lolschedule
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
+
 class MatchTagger(val match: Match) {
     fun tag(now: ZonedDateTime) {
         val midnight = now.truncatedTo(ChronoUnit.DAYS);
