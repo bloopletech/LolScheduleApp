@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 class MainActivity : AppCompatActivity() {
     private lateinit var model: MainViewModel;
+    private lateinit var matchesView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -39,17 +40,14 @@ class MainActivity : AppCompatActivity() {
 
         model.getTitle().observe(this) { title -> toolbar.title = title };
 
-        val matchesView: RecyclerView = findViewById(R.id.matches_view);
+        matchesView = findViewById(R.id.matches_view);
         val matchesLayoutManager = LinearLayoutManager(this)
         matchesView.layoutManager = matchesLayoutManager
 
         val matchesAdapter = MatchesAdapter();
         matchesView.adapter = matchesAdapter;
 
-        model.getSearchResults().observe(this) { matches ->
-            matchesAdapter.update(matches)
-            matchesView.scrollToPosition(0);
-        };
+        model.getSearchResults().observe(this) { matches -> matchesAdapter.update(matches) };
 
         val jumpToTodayView: TextView = findViewById(R.id.jump_to_today_view);
         jumpToTodayView.setOnClickListener { v: View ->
@@ -111,6 +109,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun filterYear(year: Int) {
+        matchesView.scrollToPosition(0);
         model.filterYear(year);
     }
 }
