@@ -41,7 +41,10 @@ class MainActivity : AppCompatActivity() {
         val matchesAdapter = MatchesAdapter();
         matchesView.adapter = matchesAdapter;
 
-        model.getSearchResults().observe(this) { matches -> matchesAdapter.update(matches) };
+        model.getSearchResults().observe(this) { matches ->
+            matchesAdapter.update(matches)
+            matchesView.scrollToPosition(0);
+        };
 
         val jumpToTodayView: TextView = findViewById(R.id.jump_to_today_view);
         jumpToTodayView.setOnClickListener { v: View ->
