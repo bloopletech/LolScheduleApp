@@ -9,7 +9,7 @@ class MatchTagger(private val match: Match) {
         val midnight = now.truncatedTo(ChronoUnit.DAYS);
 
         if(TimeUtils.isSameDate(match.time, now)) match.tags.add("today");
-        if(match.time.isEqual(midnight) || match.time.isAfter(midnight)) match.tags.add("today-ish");
+        match.todayish = match.time.isEqual(midnight) || match.time.isAfter(midnight);
     }
 }
 

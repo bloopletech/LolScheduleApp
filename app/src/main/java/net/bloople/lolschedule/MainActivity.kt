@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         val jumpToTodayView: TextView = findViewById(R.id.jump_to_today_view);
         jumpToTodayView.setOnClickListener { v: View ->
-            val firstMatch = matchesAdapter.getMatches().indexOfFirst { match -> match.tags.contains("today-ish") }
+            val firstMatch = matchesAdapter.getMatches().indexOfFirst { match -> match.todayish }
             if(firstMatch >= 0) matchesLayoutManager.scrollToPositionWithOffset(firstMatch, 0);
         }
         jumpToTodayView.paintFlags = jumpToTodayView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;

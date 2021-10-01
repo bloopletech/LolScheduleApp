@@ -63,7 +63,8 @@ class Match(
     val participant2: String,
     val participant2Logo: Bitmap?,
     val vods: List<String>,
-    var vodsRevealed: Int = 0
+    var vodsRevealed: Int = 0,
+    var todayish: Boolean = false
 ) {
     init {
         if(!vods.isEmpty() && vodsRevealed == 0) vodsRevealed = 1;
