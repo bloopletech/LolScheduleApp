@@ -34,7 +34,7 @@ internal class YearsAdapter : RecyclerView.Adapter<YearsAdapter.ViewHolder>() {
             yearView.paintFlags = yearView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
 
             yearView.setOnClickListener { v: View ->
-                val year = years.get(adapterPosition)
+                val year = years[adapterPosition]
                 var mainActivity = v.context as MainActivity;
                 mainActivity.filterYear(year);
             }

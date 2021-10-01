@@ -3,6 +3,7 @@ package net.bloople.lolschedule
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.time.ZonedDateTime
@@ -36,14 +37,18 @@ internal class MatchesAdapter : RecyclerView.Adapter<MatchesAdapter.ViewHolder>(
         var leagueView: TextView;
         var timeView: TextView;
         var participant1View: TextView;
+        var participant1LogoView: ImageView;
         var participant2View: TextView;
+        var participant2LogoView: ImageView;
         var vodsView: RecyclerView;
 
         init {
             leagueView = view.findViewById(R.id.league_view);
             timeView = view.findViewById(R.id.time_view);
             participant1View = view.findViewById(R.id.participant_1_view);
+            participant1LogoView = view.findViewById(R.id.participant_1_logo_view);
             participant2View = view.findViewById(R.id.participant_2_view);
+            participant2LogoView = view.findViewById(R.id.participant_2_logo_view);
             vodsView = view.findViewById(R.id.vods_view);
         }
     }
@@ -56,11 +61,27 @@ internal class MatchesAdapter : RecyclerView.Adapter<MatchesAdapter.ViewHolder>(
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val match: Match = matches[position]
+        val match = matches[position]
         holder.leagueView.setText(match.league);
-        holder.timeView.setText(TimeUtils.formatDate(match.local_time, ZonedDateTime.now()));
-        holder.participant1View.setText(match.participant_1);
-        holder.participant2View.setText(match.participant_2);
+        holder.timeView.setText(TimeUtils.formatDate(match.time, ZonedDateTime.now()));
+
+        holder.participant1View.setText(match.participant1);
+        if(match.participant1Logo != null) {
+            holder.participant1LogoView.setImageBitmap(match.participant1Logo);
+            holder.participant1LogoView.visibility = View.VISIBLE;
+        }
+        else {
+            holder.participant1LogoView.visibility = View.GONE;
+        }
+
+        holder.participant2View.setText(match.participant2);
+        if(match.participant2Logo != null) {
+            holder.participant2LogoView.setImageBitmap(match.participant2Logo);
+            holder.participant2LogoView.visibility = View.VISIBLE;
+        }
+        else {
+            holder.participant2LogoView.visibility = View.GONE;
+        }
 
         val vodsLayoutManager = LinearLayoutManager(holder.vodsView.context)
         vodsLayoutManager.orientation = LinearLayoutManager.HORIZONTAL;

@@ -4,12 +4,12 @@ import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
 
-class MatchTagger(val match: Match) {
+class MatchTagger(private val match: Match) {
     fun tag(now: ZonedDateTime) {
         val midnight = now.truncatedTo(ChronoUnit.DAYS);
 
-        if(TimeUtils.isSameDate(match.local_time, now)) match.tags.add("today");
-        if(match.local_time.isEqual(midnight) || match.local_time.isAfter(midnight)) match.tags.add("today-ish");
+        if(TimeUtils.isSameDate(match.time, now)) match.tags.add("today");
+        if(match.time.isEqual(midnight) || match.time.isAfter(midnight)) match.tags.add("today-ish");
     }
 }
 

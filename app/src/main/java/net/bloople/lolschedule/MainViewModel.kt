@@ -79,7 +79,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 //        }
 //    }
     private fun resolve() {
-        searchResults.postValue(schedule.matches.filter { it.local_time.year == filterYear });
+        searchResults.postValue(schedule.matches[filterYear]);
         title.postValue("$filterYear LoL eSports Schedule");
     }
 
@@ -89,9 +89,11 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
             schedule = Schedule.download();
 
             val now = ZonedDateTime.now();
-            for(match in schedule.matches) MatchTagger(match).tag(now);
+            for(matches in schedule.matches.values) {
+                for(match in matches) MatchTagger(match).tag(now)
+            };
 
-            val yearsData = schedule.matches.map { match -> match.local_time.year }.distinct().sorted();
+            val yearsData = schedule.matches.keys.toList()
             years.postValue(yearsData);
 
             filterYear = yearsData.last();
