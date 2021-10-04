@@ -38,8 +38,6 @@ class MainActivity : AppCompatActivity() {
 
         model.getYears().observe(this) { years -> yearsAdapter.update(years); };
 
-        model.getTitle().observe(this) { title -> toolbar.title = title };
-
         matchesView = findViewById(R.id.matches_view);
         val matchesLayoutManager = LinearLayoutManager(this)
         matchesView.layoutManager = matchesLayoutManager
@@ -47,7 +45,10 @@ class MainActivity : AppCompatActivity() {
         val matchesAdapter = MatchesAdapter();
         matchesView.adapter = matchesAdapter;
 
-        model.getSearchResults().observe(this) { matches -> matchesAdapter.update(matches) };
+        model.getSearchResults().observe(this) { (year, matches) ->
+            toolbar.title = "$year LoL eSports Schedule";
+            matchesAdapter.update(matches)
+        };
 
         val jumpToTodayView: TextView = findViewById(R.id.jump_to_today_view);
         jumpToTodayView.setOnClickListener { v: View ->

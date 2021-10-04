@@ -13,8 +13,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     private lateinit var schedule: Schedule;
 
     private val years: MutableLiveData<List<Int>> = MutableLiveData<List<Int>>();
-    private var title: MutableLiveData<String> = MutableLiveData<String>();
-    private val searchResults: MutableLiveData<List<Match>> = MutableLiveData<List<Match>>();
+    private val searchResults: MutableLiveData<YearSchedule> = MutableLiveData<YearSchedule>();
     private var filterYear: Int = 0
     //private val searcher: BooksSearcher = BooksSearcher()
     //private val sorter: BooksSorter = BooksSorter()
@@ -24,16 +23,12 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 //        return library
 //    }
 //
-    fun getSearchResults(): LiveData<List<Match>> {
+    fun getSearchResults(): LiveData<YearSchedule> {
         return searchResults
     }
 
     fun getYears(): LiveData<List<Int>> {
         return years
-    }
-
-    fun getTitle(): LiveData<String> {
-        return title
     }
 //
 //    fun getSorterDescription(): LiveData<String> {
@@ -79,8 +74,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 //        }
 //    }
     private fun resolve() {
-        searchResults.postValue(schedule.matches[filterYear]);
-        title.postValue("$filterYear LoL eSports Schedule");
+        searchResults.postValue(YearSchedule(filterYear, schedule[filterYear]!!));
     }
 
     fun load() {
@@ -101,3 +95,5 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         }
     }
 }
+
+data class YearSchedule(val year: Int, val matches: List<Match>)

@@ -37,6 +37,9 @@ class Schedule(serializedSchedule: SerializedSchedule) {
         }.groupBy { match -> match.time.year }.toSortedMap()
     }
 
+    operator fun get(index: Int): List<Match>? {
+        return matches[index]
+    }
 
     companion object {
         @JvmStatic
