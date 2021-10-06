@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.core.content.ContextCompat.startActivity
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.net.Uri
 
 
@@ -67,10 +68,7 @@ internal class VodsAdapter(private var match: Match) : RecyclerView.Adapter<Vods
                 holder.nameView.text = "vod ${position + 1}";
                 holder.nameView.paintFlags = holder.nameView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
             }
-            REVEAL_VIEW_TYPE -> {
-                holder.nameView.text = "...";
-                holder.nameView.paintFlags = holder.nameView.paintFlags and Paint.UNDERLINE_TEXT_FLAG.inv();
-            }
+            REVEAL_VIEW_TYPE -> {}
             else -> throw IllegalArgumentException()
         }
     }

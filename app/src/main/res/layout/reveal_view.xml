@@ -6,5 +6,6 @@
     android:paddingHorizontal="4dp"
     android:textColor="@color/white"
     android:textSize="18sp"
+    android:textStyle="bold"
     android:gravity="center"
     android:text="..." />
