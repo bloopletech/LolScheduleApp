@@ -2,7 +2,6 @@ package net.bloople.lolschedule
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import java.time.ZonedDateTime
 import java.util.concurrent.ExecutorService
@@ -12,9 +11,11 @@ import java.util.concurrent.Executors
 class MainViewModel(private val application: Application) : AndroidViewModel(application) {
     private lateinit var schedule: Schedule;
 
-    private val years: MutableLiveData<List<Int>> = MutableLiveData<List<Int>>();
-    private val searchResults: MutableLiveData<YearSchedule> = MutableLiveData<YearSchedule>();
-    private var filterYear: Int = 0
+    val years: MutableLiveData<List<Int>> = MutableLiveData();
+    val selectedYear: MutableLiveData<Int> = MutableLiveData();
+    val streams: MutableLiveData<List<Stream>> = MutableLiveData();
+    val searchResults: MutableLiveData<List<Match>> = MutableLiveData();
+
     //private val searcher: BooksSearcher = BooksSearcher()
     //private val sorter: BooksSorter = BooksSorter()
     //private var sorterDescription: MutableLiveData<String>? = null
@@ -23,13 +24,6 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 //        return library
 //    }
 //
-    fun getSearchResults(): LiveData<YearSchedule> {
-        return searchResults
-    }
-
-    fun getYears(): LiveData<List<Int>> {
-        return years
-    }
 //
 //    fun getSorterDescription(): LiveData<String> {
 //        if(sorterDescription == null) {
@@ -61,20 +55,13 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 //    }
 
     fun filterYear(year: Int) {
-        this.filterYear = year
-        resolve()
+        selectedYear.postValue(year)
+        resolve(year)
     }
 
-//    private fun resolve() {
-//        val service = Executors.newSingleThreadExecutor()
-//        service.submit {
-//            val books: ArrayList<Book> = searcher.search(library)
-//            sorter.sort(application, books)
-//            searchResults.postValue(books)
-//        }
-//    }
-    private fun resolve() {
-        searchResults.postValue(YearSchedule(filterYear, schedule[filterYear]!!));
+    private fun resolve(year: Int) {
+        streams.postValue(schedule.getStreams(year));
+        searchResults.postValue(schedule[year]!!);
     }
 
     fun load() {
@@ -87,13 +74,10 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                 for(match in matches) MatchTagger(match).tag(now)
             };
 
-            val yearsData = schedule.matches.keys.toList()
-            years.postValue(yearsData);
+            years.postValue(schedule.years);
 
-            filterYear = yearsData.last();
-            resolve();
+            selectedYear.postValue(schedule.currentYear);
+            resolve(schedule.currentYear);
         }
     }
 }
-
-data class YearSchedule(val year: Int, val matches: List<Match>)

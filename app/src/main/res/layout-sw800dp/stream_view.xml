@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="13dp"
+        android:background="#d32322">
+        <TextView
+            android:layout_width="360dp"
+            android:layout_height="36dp"
+            android:paddingHorizontal="4dp"
+            android:id="@+id/name_view"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:paddingHorizontal="4dp"
+            android:id="@+id/watch_view"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold|italic"
+            android:gravity="center"
+            android:text="WATCH LIVE NOW ➔" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#ddd" />
+</androidx.appcompat.widget.LinearLayoutCompat>

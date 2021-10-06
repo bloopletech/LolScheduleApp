@@ -13,6 +13,9 @@ import kotlin.collections.HashMap
 
 class Schedule(serializedSchedule: SerializedSchedule) {
     val matches: Map<Int, List<Match>>;
+    val streams: List<Stream>;
+    val years get() = matches.keys.toList();
+    val currentYear get() = years.last();
 
     init {
         val logos: HashMap<String, Bitmap> = HashMap();
@@ -35,10 +38,23 @@ class Schedule(serializedSchedule: SerializedSchedule) {
                 serializedMatch.vods
             )
         }.groupBy { match -> match.time.year }.toSortedMap()
+
+        streams = serializedSchedule.streams.map { serializedStream ->
+            Stream(
+                serializedStream.name,
+                serializedStream.url,
+                serializedStream.league,
+                serializedStream.league_long
+            )
+        }
     }
 
     operator fun get(index: Int): List<Match>? {
         return matches[index]
+    }
+
+    fun getStreams(year: Int): List<Stream> {
+        return if(year == currentYear) streams else emptyList();
     }
 
     companion object {
@@ -73,3 +89,10 @@ class Match(
         if(!vods.isEmpty() && vodsRevealed == 0) vodsRevealed = 1;
     }
 }
+
+class Stream(
+    val name: String,
+    val url: String,
+    val league: String,
+    val leagueLong: String
+)

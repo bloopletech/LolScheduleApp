@@ -12,12 +12,13 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var model: MainViewModel;
-    private lateinit var matchesView: RecyclerView
+    private lateinit var resultsView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        model.selectedYear.observe(this) { year -> toolbar.title = "$year LoL eSports Schedule"; }
+
         val yearsView: RecyclerView = findViewById(R.id.years_view);
         val yearsLayoutManager = LinearLayoutManager(this)
         yearsLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
@@ -36,36 +39,43 @@ class MainActivity : AppCompatActivity() {
         val yearsAdapter = YearsAdapter();
         yearsView.adapter = yearsAdapter;
 
-        model.getYears().observe(this) { years -> yearsAdapter.update(years); };
+        model.years.observe(this) { years -> yearsAdapter.update(years); };
 
-        matchesView = findViewById(R.id.matches_view);
-        val matchesLayoutManager = LinearLayoutManager(this)
-        matchesView.layoutManager = matchesLayoutManager
+        resultsView = findViewById(R.id.results_view);
+        val resultsLayoutManager = LinearLayoutManager(this);
+        resultsView.layoutManager = resultsLayoutManager;
 
+        val streamsAdapter = StreamsAdapter();
         val matchesAdapter = MatchesAdapter();
-        matchesView.adapter = matchesAdapter;
 
-        model.getSearchResults().observe(this) { (year, matches) ->
-            toolbar.title = "$year LoL eSports Schedule";
-            matchesAdapter.update(matches)
-        };
+        val resultsAdapter = ConcatAdapter();
+        resultsAdapter.addAdapter(streamsAdapter);
+        resultsAdapter.addAdapter(matchesAdapter);
+
+        resultsView.adapter = resultsAdapter;
+
+        model.streams.observe(this) { streams -> streamsAdapter.update(streams) }
+
+        model.searchResults.observe(this) { matches -> matchesAdapter.update(matches) };
 
         val jumpToTodayView: TextView = findViewById(R.id.jump_to_today_view);
         jumpToTodayView.setOnClickListener { v: View ->
             val firstMatch = matchesAdapter.getMatches().indexOfFirst { match -> match.todayish }
-            if(firstMatch >= 0) matchesLayoutManager.scrollToPositionWithOffset(firstMatch, 0);
+            if(firstMatch >= 0) {
+                resultsLayoutManager.scrollToPositionWithOffset(streamsAdapter.itemCount + firstMatch, 0)
+            }
         }
         jumpToTodayView.paintFlags = jumpToTodayView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
 
         val jumpToTopView: TextView = findViewById(R.id.jump_to_top_view);
         jumpToTopView.setOnClickListener { v: View ->
-            matchesView.scrollToPosition(0);
+            resultsView.scrollToPosition(0);
         }
         jumpToTopView.paintFlags = jumpToTopView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
 
         val jumpToBottomView: TextView = findViewById(R.id.jump_to_bottom_view);
         jumpToBottomView.setOnClickListener { v: View ->
-            matchesView.scrollToPosition(matchesAdapter.itemCount - 1);
+            resultsView.scrollToPosition(resultsAdapter.itemCount - 1);
         }
         jumpToBottomView.paintFlags = jumpToBottomView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
 
@@ -75,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             "Please wait while the schedule is loaded...",
             true);
 
-        model.getSearchResults().observe(this) { matches ->
+        model.searchResults.observe(this) { matches ->
             loadingDialog?.let {
                 it.dismiss();
                 loadingDialog = null;
@@ -110,7 +120,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun filterYear(year: Int) {
-        matchesView.scrollToPosition(0);
+        resultsView.scrollToPosition(0);
         model.filterYear(year);
     }
 }
