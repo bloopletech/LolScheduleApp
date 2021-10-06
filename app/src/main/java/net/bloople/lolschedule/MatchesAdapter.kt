@@ -87,8 +87,7 @@ internal class MatchesAdapter : RecyclerView.Adapter<MatchesAdapter.ViewHolder>(
             holder.participant2LogoView.visibility = View.GONE;
         }
 
-        val vodsAdapter = VodsAdapter(match);
-        holder.vodsView.adapter = vodsAdapter;
+        holder.vodsView.adapter = VodsAdapter(match);
     }
 
     init {

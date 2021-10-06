@@ -13,15 +13,13 @@ import android.net.Uri
 
 
 internal class VodsAdapter(private var match: Match) : RecyclerView.Adapter<VodsAdapter.ViewHolder>() {
-    private var revealedVods: ArrayList<String> = ArrayList();
-
     override fun getItemId(position: Int): Long {
         return position.toLong();
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount(): Int {
-        return Math.min(revealedVods.size + 1, match.vods.size);
+        return Math.min(match.vodsRevealed + 1, match.vods.size);
     }
 
     internal inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -33,16 +31,13 @@ internal class VodsAdapter(private var match: Match) : RecyclerView.Adapter<Vods
             nameView.setOnClickListener { v: View ->
                 when(getItemViewType(adapterPosition)) {
                     VOD_VIEW_TYPE -> {
-                        var vod = revealedVods.get(adapterPosition);
-                        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(vod));
+                        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(match.vods[adapterPosition]));
                         startActivity(v.context, browserIntent, null);
                     }
                     REVEAL_VIEW_TYPE -> {
-                        if(adapterPosition < match.vods.size) {
-                            revealedVods.add(match.vods.get(adapterPosition));
-                            match.vodsRevealed += 1;
-                            notifyDataSetChanged();
-                        }
+                        match.vodsRevealed += 1;
+                        if(adapterPosition == match.vods.size - 1) notifyItemChanged(adapterPosition);
+                        else notifyItemInserted(adapterPosition);
                     }
                     else -> throw IllegalArgumentException()
                 }
@@ -51,7 +46,7 @@ internal class VodsAdapter(private var match: Match) : RecyclerView.Adapter<Vods
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if(position == revealedVods.size && position < match.vods.size) REVEAL_VIEW_TYPE else VOD_VIEW_TYPE;
+        return if(position == match.vodsRevealed) REVEAL_VIEW_TYPE else VOD_VIEW_TYPE;
     }
 
     // Create new views (invoked by the layout manager)
@@ -69,12 +64,11 @@ internal class VodsAdapter(private var match: Match) : RecyclerView.Adapter<Vods
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         when(holder.itemViewType) {
             VOD_VIEW_TYPE -> {
-                val vod: String = revealedVods[position];
-                holder.nameView.setText("vod ${position + 1}");
+                holder.nameView.text = "vod ${position + 1}";
                 holder.nameView.paintFlags = holder.nameView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
             }
             REVEAL_VIEW_TYPE -> {
-                holder.nameView.setText("...");
+                holder.nameView.text = "...";
                 holder.nameView.paintFlags = holder.nameView.paintFlags and Paint.UNDERLINE_TEXT_FLAG.inv();
             }
             else -> throw IllegalArgumentException()
@@ -83,7 +77,6 @@ internal class VodsAdapter(private var match: Match) : RecyclerView.Adapter<Vods
 
     init {
         setHasStableIds(true);
-        repeat(match.vodsRevealed) { revealedVods.add(match.vods[it]); }
     }
 
     companion object {
