@@ -54,6 +54,8 @@ internal class MatchesAdapter : RecyclerView.Adapter<MatchesAdapter.ViewHolder>(
             val vodsLayoutManager = LinearLayoutManager(vodsView.context)
             vodsLayoutManager.orientation = LinearLayoutManager.HORIZONTAL;
             vodsView.layoutManager = vodsLayoutManager
+
+            vodsView.itemAnimator = null
         }
     }
 
