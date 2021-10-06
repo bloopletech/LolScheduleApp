@@ -50,6 +50,10 @@ internal class MatchesAdapter : RecyclerView.Adapter<MatchesAdapter.ViewHolder>(
             participant2View = view.findViewById(R.id.participant_2_view);
             participant2LogoView = view.findViewById(R.id.participant_2_logo_view);
             vodsView = view.findViewById(R.id.vods_view);
+
+            val vodsLayoutManager = LinearLayoutManager(vodsView.context)
+            vodsLayoutManager.orientation = LinearLayoutManager.HORIZONTAL;
+            vodsView.layoutManager = vodsLayoutManager
         }
     }
 
@@ -82,10 +86,6 @@ internal class MatchesAdapter : RecyclerView.Adapter<MatchesAdapter.ViewHolder>(
         else {
             holder.participant2LogoView.visibility = View.GONE;
         }
-
-        val vodsLayoutManager = LinearLayoutManager(holder.vodsView.context)
-        vodsLayoutManager.orientation = LinearLayoutManager.HORIZONTAL;
-        holder.vodsView.layoutManager = vodsLayoutManager
 
         val vodsAdapter = VodsAdapter(match);
         holder.vodsView.adapter = vodsAdapter;
