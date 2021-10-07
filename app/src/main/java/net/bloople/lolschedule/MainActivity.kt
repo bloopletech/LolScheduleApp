@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        model.selectedYear.observe(this) { year -> toolbar.title = "$year LoL eSports Schedule"; }
+        model.getSelectedYear().observe(this) { year -> toolbar.title = "$year LoL eSports Schedule"; }
 
         val yearsView: RecyclerView = findViewById(R.id.years_view);
         val yearsLayoutManager = LinearLayoutManager(this)
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         val yearsAdapter = YearsAdapter();
         yearsView.adapter = yearsAdapter;
 
-        model.years.observe(this) { years -> yearsAdapter.update(years); };
+        model.getYears().observe(this) { years -> yearsAdapter.update(years); };
 
         resultsView = findViewById(R.id.results_view);
         val resultsLayoutManager = LinearLayoutManager(this);
@@ -54,9 +54,9 @@ class MainActivity : AppCompatActivity() {
 
         resultsView.adapter = resultsAdapter;
 
-        model.streams.observe(this) { streams -> streamsAdapter.update(streams) }
+        model.getStreams().observe(this) { streams -> streamsAdapter.update(streams) }
 
-        model.searchResults.observe(this) { matches -> matchesAdapter.update(matches) };
+        model.getSearchResults().observe(this) { matches -> matchesAdapter.update(matches) };
 
         val jumpToTodayView: TextView = findViewById(R.id.jump_to_today_view);
         jumpToTodayView.setOnClickListener { v: View ->
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             "Please wait while the schedule is loaded...",
             true);
 
-        model.searchResults.observe(this) { matches ->
+        model.getSearchResults().observe(this) { matches ->
             loadingDialog?.let {
                 it.dismiss();
                 loadingDialog = null;
@@ -121,6 +121,6 @@ class MainActivity : AppCompatActivity() {
 
     fun filterYear(year: Int) {
         resultsView.scrollToPosition(0);
-        model.filterYear(year);
+        model.setSelectedYear(year);
     }
 }
