@@ -3,10 +3,6 @@ package net.bloople.lolschedule
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
-import java.lang.Exception
-import java.net.URL
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import kotlin.collections.HashMap
@@ -56,20 +52,6 @@ class Schedule(serializedSchedule: SerializedSchedule) {
 
     fun getStreams(year: Int): List<Stream> {
         return if(year == currentYear) streams else emptyList();
-    }
-
-    companion object {
-        @JvmStatic
-        fun download(): Schedule {
-            try {
-                val connection = URL("https://lol.bloople.net/data.json").openConnection();
-                return Schedule(Json.decodeFromStream(connection.getInputStream()));
-            }
-            catch(e: Exception) {
-                e.printStackTrace();
-                throw e;
-            }
-        }
     }
 }
 

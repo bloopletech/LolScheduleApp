@@ -5,10 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.time.ZonedDateTime
 
 
 class MainViewModel(private val application: Application) : AndroidViewModel(application) {
@@ -92,19 +90,14 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 
     fun load() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                schedule = Schedule.download();
+            ScheduleRepository(application).schedules.collect { updatedSchedule ->
+                schedule = updatedSchedule
 
-                val now = ZonedDateTime.now();
-                for(matches in schedule.matches.values) {
-                    for(match in matches) MatchTagger(match).tag(now)
-                };
+                years.value = schedule.years;
+
+                if(!schedule.years.contains(selectedYear.value)) selectedYear.value = schedule.currentYear
+                resolve()
             }
-
-            years.value = schedule.years;
-
-            if(!schedule.years.contains(selectedYear.value)) selectedYear.value = schedule.currentYear
-            resolve()
         }
     }
 }
