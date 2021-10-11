@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         resultsView.layoutManager = resultsLayoutManager;
 
         val streamsAdapter = StreamsAdapter();
-        val matchesAdapter = MatchesAdapter();
+        val matchesAdapter = MatchesAdapter(model.getMatchRevealedVods());
 
         val resultsAdapter = ConcatAdapter();
         resultsAdapter.addAdapter(streamsAdapter);

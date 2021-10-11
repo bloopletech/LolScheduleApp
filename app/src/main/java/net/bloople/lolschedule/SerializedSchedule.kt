@@ -51,7 +51,9 @@ data class SerializedMatch(
     val player_1: String? = null,
     val player_2: String? = null,
     val vods: List<String> = ArrayList()
-)
+) {
+    val key get() = "$league_slug-${team_1.orEmpty()}-${team_2.orEmpty()}-${player_1.orEmpty()}-${player_2.orEmpty()}-$time"
+}
 
 @Serializable
 data class SerializedLogo(

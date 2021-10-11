@@ -9,18 +9,17 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.core.content.ContextCompat.startActivity
 
 import android.content.Intent
-import android.graphics.Typeface
 import android.net.Uri
 
 
-internal class VodsAdapter(private var match: Match) : RecyclerView.Adapter<VodsAdapter.ViewHolder>() {
+internal class VodsAdapter(private val match: Match, private val matchRevealedVods: MatchRevealedVods) : RecyclerView.Adapter<VodsAdapter.ViewHolder>() {
     override fun getItemId(position: Int): Long {
         return position.toLong();
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount(): Int {
-        return Math.min(match.vodsRevealed + 1, match.vods.size);
+        return Math.min(matchRevealedVods[match] + 1, match.vods.size);
     }
 
     internal inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -36,7 +35,7 @@ internal class VodsAdapter(private var match: Match) : RecyclerView.Adapter<Vods
                         startActivity(v.context, browserIntent, null);
                     }
                     REVEAL_VIEW_TYPE -> {
-                        match.vodsRevealed += 1;
+                        matchRevealedVods[match] += 1;
                         if(adapterPosition == match.vods.size - 1) notifyItemChanged(adapterPosition);
                         else notifyItemInserted(adapterPosition);
                     }
@@ -47,7 +46,7 @@ internal class VodsAdapter(private var match: Match) : RecyclerView.Adapter<Vods
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if(position == match.vodsRevealed) REVEAL_VIEW_TYPE else VOD_VIEW_TYPE;
+        return if(position == matchRevealedVods[match]) REVEAL_VIEW_TYPE else VOD_VIEW_TYPE;
     }
 
     // Create new views (invoked by the layout manager)

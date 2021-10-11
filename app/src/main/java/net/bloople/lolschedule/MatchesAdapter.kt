@@ -12,7 +12,7 @@ import java.util.ArrayList
 import androidx.recyclerview.widget.LinearLayoutManager
 
 
-internal class MatchesAdapter : RecyclerView.Adapter<MatchesAdapter.ViewHolder>() {
+internal class MatchesAdapter(private val matchRevealedVods: MatchRevealedVods) : RecyclerView.Adapter<MatchesAdapter.ViewHolder>() {
     private var matches: List<Match> = ArrayList();
 
     override fun getItemId(position: Int): Long {
@@ -89,7 +89,7 @@ internal class MatchesAdapter : RecyclerView.Adapter<MatchesAdapter.ViewHolder>(
             holder.participant2LogoView.visibility = View.GONE;
         }
 
-        holder.vodsView.adapter = VodsAdapter(match);
+        holder.vodsView.adapter = VodsAdapter(match, matchRevealedVods);
     }
 
     init {

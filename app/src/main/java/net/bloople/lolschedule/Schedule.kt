@@ -35,7 +35,8 @@ class Schedule(serializedSchedule: SerializedSchedule) {
                 serializedMatch.team_1?.let { logos[serializedMatch.team_1_logo] },
                 serializedMatch.team_2 ?: serializedMatch.player_2!!,
                 serializedMatch.team_2?.let { logos[serializedMatch.team_2_logo] },
-                serializedMatch.vods
+                serializedMatch.vods,
+                serializedMatch.key
             )
         }.groupBy { match -> match.time.year }.toSortedMap()
 
@@ -82,13 +83,9 @@ class Match(
     val participant2: String,
     val participant2Logo: Bitmap?,
     val vods: List<String>,
-    var vodsRevealed: Int = 0,
+    val key: String,
     var todayish: Boolean = false
-) {
-    init {
-        if(!vods.isEmpty() && vodsRevealed == 0) vodsRevealed = 1;
-    }
-}
+)
 
 class Stream(
     val name: String,
