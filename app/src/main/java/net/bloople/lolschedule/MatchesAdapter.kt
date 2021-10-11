@@ -12,7 +12,7 @@ import java.util.ArrayList
 import androidx.recyclerview.widget.LinearLayoutManager
 
 
-internal class MatchesAdapter(private val matchRevealedVods: MatchRevealedVods) : RecyclerView.Adapter<MatchesAdapter.ViewHolder>() {
+internal class MatchesAdapter(private val matchesMetadata: MatchesMetadata) : RecyclerView.Adapter<MatchesAdapter.ViewHolder>() {
     private var matches: List<Match> = ArrayList();
 
     override fun getItemId(position: Int): Long {
@@ -53,7 +53,11 @@ internal class MatchesAdapter(private val matchRevealedVods: MatchRevealedVods) 
             participant2LogoView = view.findViewById(R.id.participant_2_logo_view);
             vodsView = view.findViewById(R.id.vods_view);
 
-            participantsView.setOnClickListener { v -> v.alpha = 1f }
+            participantsView.setOnClickListener { v ->
+                v.alpha = 1f
+                val match = matches[adapterPosition]
+                matchesMetadata[match].showSpoiler = true
+            }
 
             val vodsLayoutManager = LinearLayoutManager(vodsView.context)
             vodsLayoutManager.orientation = LinearLayoutManager.HORIZONTAL;
@@ -75,7 +79,7 @@ internal class MatchesAdapter(private val matchRevealedVods: MatchRevealedVods) 
         holder.leagueView.setText(match.league);
         holder.timeView.setText(TimeUtils.formatDate(match.time, ZonedDateTime.now()));
 
-        holder.participantsView.alpha = if(match.spoiler) 0f else 1f;
+        holder.participantsView.alpha = if(matchesMetadata[match].showSpoiler) 1f else 0f;
 
         holder.participant1View.setText(match.participant1);
         if(match.participant1Logo != null) {
@@ -95,7 +99,7 @@ internal class MatchesAdapter(private val matchRevealedVods: MatchRevealedVods) 
             holder.participant2LogoView.visibility = View.GONE;
         }
 
-        holder.vodsView.adapter = VodsAdapter(match, matchRevealedVods);
+        holder.vodsView.adapter = VodsAdapter(match, matchesMetadata);
     }
 
     init {

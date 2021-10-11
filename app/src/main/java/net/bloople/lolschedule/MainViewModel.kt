@@ -16,7 +16,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     private val selectedYear: MutableLiveData<Int> = MutableLiveData();
     private val streams: MutableLiveData<List<Stream>> = MutableLiveData();
     private val searchResults: MutableLiveData<List<Match>> = MutableLiveData();
-    private val matchRevealedVods: MatchRevealedVods = MatchRevealedVods();
+    private val matchesMetadata: MatchesMetadata = MatchesMetadata();
 
     //private val searcher: BooksSearcher = BooksSearcher()
     //private val sorter: BooksSorter = BooksSorter()
@@ -38,8 +38,8 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         return searchResults
     }
 
-    fun getMatchRevealedVods(): MatchRevealedVods {
-        return matchRevealedVods
+    fun getMatchRevealedVods(): MatchesMetadata {
+        return matchesMetadata
     }
 
 //    fun getLibrary(): Library? {
