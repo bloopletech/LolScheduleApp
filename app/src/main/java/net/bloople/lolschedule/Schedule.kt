@@ -27,6 +27,7 @@ class Schedule(serializedSchedule: SerializedSchedule) {
                 serializedMatch.tags.toMutableList(),
                 serializedMatch.league,
                 serializedMatch.league_long,
+                serializedMatch.bracket,
                 serializedMatch.team_1 ?: serializedMatch.player_1!!,
                 serializedMatch.team_1?.let { logos[serializedMatch.team_1_logo] },
                 serializedMatch.team_2 ?: serializedMatch.player_2!!,
@@ -60,6 +61,7 @@ class Match(
     val tags: MutableList<String>,
     val league: String,
     val leagueLong: String,
+    val bracket: String?,
     val participant1: String,
     val participant1Logo: Bitmap?,
     val participant2: String,
@@ -68,7 +70,11 @@ class Match(
     val key: String,
     var todayish: Boolean = false,
     var spoiler: Boolean = false
-)
+) {
+    fun bracketEquals(other: Match): Boolean {
+        return league == other.league && bracket != null && bracket == other.bracket;
+    }
+}
 
 class Stream(
     val name: String,

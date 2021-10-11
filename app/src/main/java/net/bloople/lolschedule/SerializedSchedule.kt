@@ -44,13 +44,15 @@ data class SerializedMatch(
     val league: String,
     val league_long: String,
     val league_slug: String,
+    val bracket: String? = null,
     val team_1: String? = null,
     val team_1_logo: String? = null,
     val team_2: String? = null,
     val team_2_logo: String? = null,
     val player_1: String? = null,
     val player_2: String? = null,
-    val vods: List<String> = ArrayList()
+    val vods: List<String> = ArrayList(),
+    val stream: SerializedStream? = null
 ) {
     val key get() = "$league_slug-${team_1.orEmpty()}-${team_2.orEmpty()}-${player_1.orEmpty()}-${player_2.orEmpty()}-$time"
 }

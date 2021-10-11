@@ -54,9 +54,12 @@ internal class MatchesAdapter(private val matchesMetadata: MatchesMetadata) : Re
             vodsView = view.findViewById(R.id.vods_view);
 
             participantsView.setOnClickListener { v ->
+                if(v.alpha >= 1f) return@setOnClickListener;
+
                 v.alpha = 1f
                 val match = matches[adapterPosition]
                 matchesMetadata[match].showSpoiler = true
+                showRelatedSpoilers(match)
             }
 
             val vodsLayoutManager = LinearLayoutManager(vodsView.context)
@@ -65,6 +68,16 @@ internal class MatchesAdapter(private val matchesMetadata: MatchesMetadata) : Re
 
             vodsView.itemAnimator = null
         }
+    }
+
+    private fun showRelatedSpoilers(match: Match) {
+        if(match.bracket == null) return;
+
+        val results = matches.withIndex().dropWhile { other -> !match.bracketEquals(other.value) }
+            .takeWhile { other -> match.bracketEquals(other.value) }
+        for(other in results) matchesMetadata[other.value].showSpoiler = true
+
+        notifyItemRangeChanged(results.first().index, results.size)
     }
 
     // Create new views (invoked by the layout manager)
