@@ -11,7 +11,7 @@ android {
         applicationId "net.bloople.lolschedule"
         minSdk 28
         targetSdk 29
-        final def version = 6
+        final def version = 7
         versionCode version
         versionName version.toString()
     }
