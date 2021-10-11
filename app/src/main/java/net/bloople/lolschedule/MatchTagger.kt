@@ -10,6 +10,7 @@ class MatchTagger(private val match: Match) {
 
         if(TimeUtils.isSameDate(match.time, now)) match.tags.add("today");
         match.todayish = match.time.isEqual(midnight) || match.time.isAfter(midnight);
+        match.spoiler = match.tags.contains("spoiler");
     }
 }
 

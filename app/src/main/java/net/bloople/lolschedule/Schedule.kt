@@ -66,7 +66,8 @@ class Match(
     val participant2Logo: Bitmap?,
     val vods: List<String>,
     val key: String,
-    var todayish: Boolean = false
+    var todayish: Boolean = false,
+    var spoiler: Boolean = false
 )
 
 class Stream(
