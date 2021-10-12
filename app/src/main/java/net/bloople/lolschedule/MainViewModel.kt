@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
-class MainViewModel(private val application: Application) : AndroidViewModel(application) {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
     private lateinit var schedule: Schedule
 
     private val years: MutableLiveData<List<Int>> = MutableLiveData()
@@ -95,7 +95,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 
     fun load() {
         viewModelScope.launch {
-            ScheduleRepository(application).schedules.collect { updatedSchedule ->
+            ScheduleRepository(getApplication()).schedules.collect { updatedSchedule ->
                 schedule = updatedSchedule
 
                 lastDownloaded.value = schedule.downloaded
