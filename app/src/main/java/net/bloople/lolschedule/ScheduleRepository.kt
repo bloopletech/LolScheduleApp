@@ -23,7 +23,7 @@ class ScheduleRepository(private val context: Context) {
     init {
         schedules = flow {
             load()?.let {
-                emit(it)
+                emit(Schedule(it))
                 val now = System.currentTimeMillis()
                 val age = now - lastDownloaded
                 println("now: $now, age: $age, delay: ${REFRESH_INTERVAL_MS - age}")
@@ -31,13 +31,16 @@ class ScheduleRepository(private val context: Context) {
             }
 
             while(true) {
-                download()?.let { emit(it) }
+                download()?.let {
+                    emit(Schedule(it))
+                    save(it)
+                }
                 delay(REFRESH_INTERVAL_MS)
             }
         }
     }
 
-    private suspend fun load(): Schedule? {
+    private suspend fun load(): SerializedSchedule? {
         try {
             val serializedSchedule: SerializedSchedule
 
@@ -49,7 +52,7 @@ class ScheduleRepository(private val context: Context) {
                 externalCacheFile.inputStream().use { serializedSchedule = Json.decodeFromStream(it) }
             }
 
-            return toSchedule(serializedSchedule)
+            return serializedSchedule
         }
         catch(e: FileNotFoundException) {
             return null
@@ -74,7 +77,7 @@ class ScheduleRepository(private val context: Context) {
         }
     }
 
-    private suspend fun download(): Schedule? {
+    private suspend fun download(): SerializedSchedule? {
         try {
             val serializedSchedule: SerializedSchedule
 
@@ -87,23 +90,12 @@ class ScheduleRepository(private val context: Context) {
             lastDownloaded = System.currentTimeMillis()
             println("Updated lastDownloaded to $lastDownloaded")
 
-            save(serializedSchedule)
-
-            return toSchedule(serializedSchedule)
+            return serializedSchedule
         }
         catch(e: Exception) {
             e.printStackTrace()
             return null
         }
-    }
-
-    private fun toSchedule(serializedSchedule: SerializedSchedule): Schedule {
-        val now = ZonedDateTime.now()
-        val schedule = Schedule(serializedSchedule)
-        for(matches in schedule.matches.values) {
-            for(match in matches) MatchTagger(match).tag(now)
-        }
-        return schedule
     }
 
     companion object {

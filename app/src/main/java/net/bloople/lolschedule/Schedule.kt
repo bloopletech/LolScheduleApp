@@ -37,6 +37,8 @@ class Schedule(serializedSchedule: SerializedSchedule) {
             )
         }.groupBy { match -> match.time.year }.toSortedMap()
 
+        tagMatches()
+
         streams = serializedSchedule.streams.map { serializedStream ->
             Stream(
                 serializedStream.name,
@@ -53,6 +55,13 @@ class Schedule(serializedSchedule: SerializedSchedule) {
 
     fun getStreams(year: Int): List<Stream> {
         return if(year == currentYear) streams else emptyList()
+    }
+
+    fun tagMatches() {
+        val now = ZonedDateTime.now()
+        for(matches in matches.values) {
+            for(match in matches) MatchTagger(match).tag(now)
+        }
     }
 }
 
