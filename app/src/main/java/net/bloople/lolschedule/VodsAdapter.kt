@@ -14,30 +14,30 @@ import android.net.Uri
 
 internal class VodsAdapter(private val match: Match, private val matchesMetadata: MatchesMetadata) : RecyclerView.Adapter<VodsAdapter.ViewHolder>() {
     override fun getItemId(position: Int): Long {
-        return position.toLong();
+        return position.toLong()
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount(): Int {
-        return Math.min(matchesMetadata[match].vodsRevealed + 1, match.vods.size);
+        return Math.min(matchesMetadata[match].vodsRevealed + 1, match.vods.size)
     }
 
     internal inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var nameView: TextView;
+        var nameView: TextView
 
         init {
-            nameView = view.findViewById(R.id.name_view);
+            nameView = view.findViewById(R.id.name_view)
 
             nameView.setOnClickListener { v: View ->
                 when(getItemViewType(adapterPosition)) {
                     VOD_VIEW_TYPE -> {
-                        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(match.vods[adapterPosition]));
-                        startActivity(v.context, browserIntent, null);
+                        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(match.vods[adapterPosition]))
+                        startActivity(v.context, browserIntent, null)
                     }
                     REVEAL_VIEW_TYPE -> {
-                        matchesMetadata[match].vodsRevealed += 1;
-                        if(adapterPosition == match.vods.size - 1) notifyItemChanged(adapterPosition);
-                        else notifyItemInserted(adapterPosition);
+                        matchesMetadata[match].vodsRevealed += 1
+                        if(adapterPosition == match.vods.size - 1) notifyItemChanged(adapterPosition)
+                        else notifyItemInserted(adapterPosition)
                     }
                     else -> throw IllegalArgumentException()
                 }
@@ -46,7 +46,7 @@ internal class VodsAdapter(private val match: Match, private val matchesMetadata
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if(position == matchesMetadata[match].vodsRevealed) REVEAL_VIEW_TYPE else VOD_VIEW_TYPE;
+        return if(position == matchesMetadata[match].vodsRevealed) REVEAL_VIEW_TYPE else VOD_VIEW_TYPE
     }
 
     // Create new views (invoked by the layout manager)
@@ -56,16 +56,16 @@ internal class VodsAdapter(private val match: Match, private val matchesMetadata
             REVEAL_VIEW_TYPE -> R.layout.reveal_view
             else -> throw IllegalArgumentException()
         }
-        val view: View = LayoutInflater.from(parent.context).inflate(viewId, parent, false);
-        return ViewHolder(view);
+        val view: View = LayoutInflater.from(parent.context).inflate(viewId, parent, false)
+        return ViewHolder(view)
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         when(holder.itemViewType) {
             VOD_VIEW_TYPE -> {
-                holder.nameView.text = "vod ${position + 1}";
-                holder.nameView.paintFlags = holder.nameView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
+                holder.nameView.text = "vod ${position + 1}"
+                holder.nameView.paintFlags = holder.nameView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
             }
             REVEAL_VIEW_TYPE -> {}
             else -> throw IllegalArgumentException()
@@ -73,11 +73,11 @@ internal class VodsAdapter(private val match: Match, private val matchesMetadata
     }
 
     init {
-        setHasStableIds(true);
+        setHasStableIds(true)
     }
 
     companion object {
-        private const val VOD_VIEW_TYPE = 0;
-        private const val REVEAL_VIEW_TYPE = 1;
+        private const val VOD_VIEW_TYPE = 0
+        private const val REVEAL_VIEW_TYPE = 1
     }
 }

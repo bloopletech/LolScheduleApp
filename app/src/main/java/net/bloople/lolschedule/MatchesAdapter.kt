@@ -13,48 +13,48 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 
 internal class MatchesAdapter(private val matchesMetadata: MatchesMetadata) : RecyclerView.Adapter<MatchesAdapter.ViewHolder>() {
-    private var matches: List<Match> = ArrayList();
+    private var matches: List<Match> = ArrayList()
 
     override fun getItemId(position: Int): Long {
-        return position.toLong();
+        return position.toLong()
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount(): Int {
-        return matches.size;
+        return matches.size
     }
 
     fun update(matches: List<Match>) {
-        this.matches = matches;
-        notifyDataSetChanged();
+        this.matches = matches
+        notifyDataSetChanged()
     }
 
     fun getMatches(): List<Match> {
-        return matches;
+        return matches
     }
 
     internal inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var leagueView: TextView;
-        var timeView: TextView;
-        var participantsView: View;
-        var participant1View: TextView;
-        var participant1LogoView: ImageView;
-        var participant2View: TextView;
-        var participant2LogoView: ImageView;
-        var vodsView: RecyclerView;
+        var leagueView: TextView
+        var timeView: TextView
+        var participantsView: View
+        var participant1View: TextView
+        var participant1LogoView: ImageView
+        var participant2View: TextView
+        var participant2LogoView: ImageView
+        var vodsView: RecyclerView
 
         init {
-            leagueView = view.findViewById(R.id.league_view);
-            timeView = view.findViewById(R.id.time_view);
-            participantsView = view.findViewById(R.id.participants_view);
-            participant1View = view.findViewById(R.id.participant_1_view);
-            participant1LogoView = view.findViewById(R.id.participant_1_logo_view);
-            participant2View = view.findViewById(R.id.participant_2_view);
-            participant2LogoView = view.findViewById(R.id.participant_2_logo_view);
-            vodsView = view.findViewById(R.id.vods_view);
+            leagueView = view.findViewById(R.id.league_view)
+            timeView = view.findViewById(R.id.time_view)
+            participantsView = view.findViewById(R.id.participants_view)
+            participant1View = view.findViewById(R.id.participant_1_view)
+            participant1LogoView = view.findViewById(R.id.participant_1_logo_view)
+            participant2View = view.findViewById(R.id.participant_2_view)
+            participant2LogoView = view.findViewById(R.id.participant_2_logo_view)
+            vodsView = view.findViewById(R.id.vods_view)
 
             participantsView.setOnClickListener { v ->
-                if(v.alpha >= 1f) return@setOnClickListener;
+                if(v.alpha >= 1f) return@setOnClickListener
 
                 v.alpha = 1f
                 val match = matches[adapterPosition]
@@ -63,7 +63,7 @@ internal class MatchesAdapter(private val matchesMetadata: MatchesMetadata) : Re
             }
 
             val vodsLayoutManager = LinearLayoutManager(vodsView.context)
-            vodsLayoutManager.orientation = LinearLayoutManager.HORIZONTAL;
+            vodsLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
             vodsView.layoutManager = vodsLayoutManager
 
             vodsView.itemAnimator = null
@@ -71,7 +71,7 @@ internal class MatchesAdapter(private val matchesMetadata: MatchesMetadata) : Re
     }
 
     private fun showRelatedSpoilers(match: Match) {
-        if(match.bracket == null) return;
+        if(match.bracket == null) return
 
         val results = matches.withIndex().dropWhile { other -> !match.bracketEquals(other.value) }
             .takeWhile { other -> match.bracketEquals(other.value) }
@@ -82,40 +82,40 @@ internal class MatchesAdapter(private val matchesMetadata: MatchesMetadata) : Re
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.match_view, parent, false);
-        return ViewHolder(view);
+        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.match_view, parent, false)
+        return ViewHolder(view)
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val match = matches[position]
-        holder.leagueView.setText(match.league);
-        holder.timeView.setText(TimeUtils.formatDate(match.time, ZonedDateTime.now()));
+        holder.leagueView.setText(match.league)
+        holder.timeView.setText(TimeUtils.formatDate(match.time, ZonedDateTime.now()))
 
-        holder.participantsView.alpha = if(matchesMetadata[match].showSpoiler) 1f else 0f;
+        holder.participantsView.alpha = if(matchesMetadata[match].showSpoiler) 1f else 0f
 
-        holder.participant1View.setText(match.participant1);
+        holder.participant1View.setText(match.participant1)
         if(match.participant1Logo != null) {
-            holder.participant1LogoView.setImageBitmap(match.participant1Logo);
-            holder.participant1LogoView.visibility = View.VISIBLE;
+            holder.participant1LogoView.setImageBitmap(match.participant1Logo)
+            holder.participant1LogoView.visibility = View.VISIBLE
         }
         else {
-            holder.participant1LogoView.visibility = View.GONE;
+            holder.participant1LogoView.visibility = View.GONE
         }
 
-        holder.participant2View.setText(match.participant2);
+        holder.participant2View.setText(match.participant2)
         if(match.participant2Logo != null) {
-            holder.participant2LogoView.setImageBitmap(match.participant2Logo);
-            holder.participant2LogoView.visibility = View.VISIBLE;
+            holder.participant2LogoView.setImageBitmap(match.participant2Logo)
+            holder.participant2LogoView.visibility = View.VISIBLE
         }
         else {
-            holder.participant2LogoView.visibility = View.GONE;
+            holder.participant2LogoView.visibility = View.GONE
         }
 
-        holder.vodsView.adapter = VodsAdapter(match, matchesMetadata);
+        holder.vodsView.adapter = VodsAdapter(match, matchesMetadata)
     }
 
     init {
-        setHasStableIds(true);
+        setHasStableIds(true)
     }
 }

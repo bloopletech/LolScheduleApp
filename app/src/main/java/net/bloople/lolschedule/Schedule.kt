@@ -8,13 +8,13 @@ import java.time.ZonedDateTime
 import kotlin.collections.HashMap
 
 class Schedule(serializedSchedule: SerializedSchedule) {
-    val matches: Map<Int, List<Match>>;
-    val streams: List<Stream>;
-    val years get() = matches.keys.toList();
-    val currentYear get() = years.last();
+    val matches: Map<Int, List<Match>>
+    val streams: List<Stream>
+    val years get() = matches.keys.toList()
+    val currentYear get() = years.last()
 
     init {
-        val logos: HashMap<String, Bitmap> = HashMap();
+        val logos: HashMap<String, Bitmap> = HashMap()
         for(serializedLogo in serializedSchedule.logos) {
             val byteArray = Base64.decode(serializedLogo.data, Base64.DEFAULT)
             val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
@@ -52,7 +52,7 @@ class Schedule(serializedSchedule: SerializedSchedule) {
     }
 
     fun getStreams(year: Int): List<Stream> {
-        return if(year == currentYear) streams else emptyList();
+        return if(year == currentYear) streams else emptyList()
     }
 }
 
@@ -72,7 +72,7 @@ class Match(
     var spoiler: Boolean = false
 ) {
     fun bracketEquals(other: Match): Boolean {
-        return league == other.league && bracket != null && bracket == other.bracket;
+        return league == other.league && bracket != null && bracket == other.bracket
     }
 }
 

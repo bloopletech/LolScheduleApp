@@ -1,7 +1,7 @@
 package net.bloople.lolschedule
 
 class MatchesMetadata {
-    private val matchesMetadata: HashMap<String, MatchMetadata> = HashMap();
+    private val matchesMetadata: HashMap<String, MatchMetadata> = HashMap()
 
     operator fun get(match: Match): MatchMetadata {
         return matchesMetadata.getOrPut(match.key) { MatchMetadata(match) }

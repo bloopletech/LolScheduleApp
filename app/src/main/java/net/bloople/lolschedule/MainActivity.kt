@@ -20,82 +20,82 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var model: MainViewModel;
+    private lateinit var model: MainViewModel
     private lateinit var resultsView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
         model = ViewModelProvider(this).get(MainViewModel::class.java)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        model.getSelectedYear().observe(this) { year -> toolbar.title = "$year LoL eSports Schedule"; }
+        model.getSelectedYear().observe(this) { year -> toolbar.title = "$year LoL eSports Schedule" }
 
-        val yearsView: RecyclerView = findViewById(R.id.years_view);
+        val yearsView: RecyclerView = findViewById(R.id.years_view)
         val yearsLayoutManager = LinearLayoutManager(this)
         yearsLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         yearsView.layoutManager = yearsLayoutManager
 
-        val yearsAdapter = YearsAdapter();
-        yearsView.adapter = yearsAdapter;
+        val yearsAdapter = YearsAdapter()
+        yearsView.adapter = yearsAdapter
 
-        model.getYears().observe(this) { years -> yearsAdapter.update(years); };
+        model.getYears().observe(this) { years -> yearsAdapter.update(years) }
 
-        resultsView = findViewById(R.id.results_view);
-        val resultsLayoutManager = LinearLayoutManager(this);
-        resultsView.layoutManager = resultsLayoutManager;
+        resultsView = findViewById(R.id.results_view)
+        val resultsLayoutManager = LinearLayoutManager(this)
+        resultsView.layoutManager = resultsLayoutManager
 
-        val streamsAdapter = StreamsAdapter();
-        val matchesAdapter = MatchesAdapter(model.getMatchRevealedVods());
+        val streamsAdapter = StreamsAdapter()
+        val matchesAdapter = MatchesAdapter(model.getMatchRevealedVods())
 
-        val resultsAdapter = ConcatAdapter();
-        resultsAdapter.addAdapter(streamsAdapter);
-        resultsAdapter.addAdapter(matchesAdapter);
+        val resultsAdapter = ConcatAdapter()
+        resultsAdapter.addAdapter(streamsAdapter)
+        resultsAdapter.addAdapter(matchesAdapter)
 
-        resultsView.adapter = resultsAdapter;
+        resultsView.adapter = resultsAdapter
 
         model.getStreams().observe(this) { streams -> streamsAdapter.update(streams) }
 
-        model.getSearchResults().observe(this) { matches -> matchesAdapter.update(matches) };
+        model.getSearchResults().observe(this) { matches -> matchesAdapter.update(matches) }
 
-        val jumpToTodayView: TextView = findViewById(R.id.jump_to_today_view);
+        val jumpToTodayView: TextView = findViewById(R.id.jump_to_today_view)
         jumpToTodayView.setOnClickListener { v: View ->
             val firstMatch = matchesAdapter.getMatches().indexOfFirst { match -> match.todayish }
             if(firstMatch >= 0) {
                 resultsLayoutManager.scrollToPositionWithOffset(streamsAdapter.itemCount + firstMatch, 0)
             }
         }
-        jumpToTodayView.paintFlags = jumpToTodayView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
+        jumpToTodayView.paintFlags = jumpToTodayView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
-        val jumpToTopView: TextView = findViewById(R.id.jump_to_top_view);
+        val jumpToTopView: TextView = findViewById(R.id.jump_to_top_view)
         jumpToTopView.setOnClickListener { v: View ->
-            resultsView.scrollToPosition(0);
+            resultsView.scrollToPosition(0)
         }
-        jumpToTopView.paintFlags = jumpToTopView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
+        jumpToTopView.paintFlags = jumpToTopView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
-        val jumpToBottomView: TextView = findViewById(R.id.jump_to_bottom_view);
+        val jumpToBottomView: TextView = findViewById(R.id.jump_to_bottom_view)
         jumpToBottomView.setOnClickListener { v: View ->
-            resultsView.scrollToPosition(resultsAdapter.itemCount - 1);
+            resultsView.scrollToPosition(resultsAdapter.itemCount - 1)
         }
-        jumpToBottomView.paintFlags = jumpToBottomView.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
+        jumpToBottomView.paintFlags = jumpToBottomView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
         var loadingDialog = ProgressDialog.show(
             this,
             "Loading schedule",
             "Please wait while the schedule is loaded...",
-            true);
+            true)
 
         model.getSearchResults().observe(this) { matches ->
             loadingDialog?.let {
-                it.dismiss();
-                loadingDialog = null;
+                it.dismiss()
+                loadingDialog = null
             }
         }
 
-        model.load();
+        model.load()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
                         This app is not associated with or sponsored by Riot Games, Inc.
                     """.trimIndent())
                     .setPositiveButton("OK") { dialogInterface, _ -> dialogInterface.cancel() }
-                    .show();
+                    .show()
             }
         }
 
@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun filterYear(year: Int) {
-        resultsView.scrollToPosition(0);
-        model.setSelectedYear(year);
+        resultsView.scrollToPosition(0)
+        model.setSelectedYear(year)
     }
 }

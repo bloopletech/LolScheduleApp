@@ -17,8 +17,8 @@ import java.net.URL
 import java.time.ZonedDateTime
 
 class ScheduleRepository(private val context: Context) {
-    val schedules: Flow<Schedule>;
-    private var lastDownloaded: Long = 0L;
+    val schedules: Flow<Schedule>
+    private var lastDownloaded: Long = 0L
 
     init {
         schedules = flow {
@@ -39,7 +39,7 @@ class ScheduleRepository(private val context: Context) {
 
     private suspend fun load(): Schedule? {
         try {
-            val serializedSchedule: SerializedSchedule;
+            val serializedSchedule: SerializedSchedule
 
             withContext(Dispatchers.IO) {
                 val externalCacheFile = File(context.externalCacheDir, DOWNLOADED_SCHEDULE_PATH)
@@ -52,11 +52,11 @@ class ScheduleRepository(private val context: Context) {
             return toSchedule(serializedSchedule)
         }
         catch(e: FileNotFoundException) {
-            return null;
+            return null
         }
         catch(e: Exception) {
-            e.printStackTrace();
-            return null;
+            e.printStackTrace()
+            return null
         }
     }
 
@@ -69,18 +69,18 @@ class ScheduleRepository(private val context: Context) {
             }
         }
         catch(e: Exception) {
-            e.printStackTrace();
-            throw e;
+            e.printStackTrace()
+            throw e
         }
     }
 
     private suspend fun download(): Schedule? {
         try {
-            val serializedSchedule: SerializedSchedule;
+            val serializedSchedule: SerializedSchedule
 
             withContext(Dispatchers.IO) {
                 println("Downloading latest schedule")
-                val connection = URL("https://lol.bloople.net/data.json").openConnection();
+                val connection = URL("https://lol.bloople.net/data.json").openConnection()
                 connection.getInputStream().use { serializedSchedule = Json.decodeFromStream(it) }
             }
 
@@ -92,8 +92,8 @@ class ScheduleRepository(private val context: Context) {
             return toSchedule(serializedSchedule)
         }
         catch(e: Exception) {
-            e.printStackTrace();
-            return null;
+            e.printStackTrace()
+            return null
         }
     }
 

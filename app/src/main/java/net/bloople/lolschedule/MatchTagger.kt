@@ -6,11 +6,11 @@ import java.time.temporal.ChronoUnit
 
 class MatchTagger(private val match: Match) {
     fun tag(now: ZonedDateTime) {
-        val midnight = now.truncatedTo(ChronoUnit.DAYS);
+        val midnight = now.truncatedTo(ChronoUnit.DAYS)
 
-        if(TimeUtils.isSameDate(match.time, now)) match.tags.add("today");
-        match.todayish = match.time.isEqual(midnight) || match.time.isAfter(midnight);
-        match.spoiler = match.tags.contains("spoiler");
+        if(TimeUtils.isSameDate(match.time, now)) match.tags.add("today")
+        match.todayish = match.time.isEqual(midnight) || match.time.isAfter(midnight)
+        match.spoiler = match.tags.contains("spoiler")
     }
 }
 

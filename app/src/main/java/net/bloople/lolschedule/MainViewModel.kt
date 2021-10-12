@@ -10,13 +10,13 @@ import kotlinx.coroutines.launch
 
 
 class MainViewModel(private val application: Application) : AndroidViewModel(application) {
-    private lateinit var schedule: Schedule;
+    private lateinit var schedule: Schedule
 
-    private val years: MutableLiveData<List<Int>> = MutableLiveData();
-    private val selectedYear: MutableLiveData<Int> = MutableLiveData();
-    private val streams: MutableLiveData<List<Stream>> = MutableLiveData();
-    private val searchResults: MutableLiveData<List<Match>> = MutableLiveData();
-    private val matchesMetadata: MatchesMetadata = MatchesMetadata();
+    private val years: MutableLiveData<List<Int>> = MutableLiveData()
+    private val selectedYear: MutableLiveData<Int> = MutableLiveData()
+    private val streams: MutableLiveData<List<Stream>> = MutableLiveData()
+    private val searchResults: MutableLiveData<List<Match>> = MutableLiveData()
+    private val matchesMetadata: MatchesMetadata = MatchesMetadata()
 
     //private val searcher: BooksSearcher = BooksSearcher()
     //private val sorter: BooksSorter = BooksSorter()
@@ -83,8 +83,8 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 
     private fun resolve() {
         selectedYear.value?.let {
-            streams.value = schedule.getStreams(it);
-            searchResults.value = schedule[it]!!;
+            streams.value = schedule.getStreams(it)
+            searchResults.value = schedule[it]!!
         }
     }
 
@@ -93,7 +93,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
             ScheduleRepository(application).schedules.collect { updatedSchedule ->
                 schedule = updatedSchedule
 
-                years.value = schedule.years;
+                years.value = schedule.years
 
                 if(!schedule.years.contains(selectedYear.value)) selectedYear.value = schedule.currentYear
                 resolve()
