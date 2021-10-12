@@ -7,7 +7,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import kotlin.collections.HashMap
 
-class Schedule(serializedSchedule: SerializedSchedule) {
+class Schedule(serializedSchedule: SerializedSchedule, val downloaded: Long) {
     val matches: Map<Int, List<Match>>
     val streams: List<Stream>
     val years get() = matches.keys.toList()

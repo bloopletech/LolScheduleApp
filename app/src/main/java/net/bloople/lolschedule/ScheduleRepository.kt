@@ -23,7 +23,7 @@ class ScheduleRepository(private val context: Context) {
     init {
         schedules = flow {
             load()?.let {
-                emit(Schedule(it))
+                emit(Schedule(it, lastDownloaded))
                 val now = System.currentTimeMillis()
                 val age = now - lastDownloaded
                 println("now: $now, age: $age, delay: ${REFRESH_INTERVAL_MS - age}")
@@ -32,7 +32,7 @@ class ScheduleRepository(private val context: Context) {
 
             while(true) {
                 download()?.let {
-                    emit(Schedule(it))
+                    emit(Schedule(it, lastDownloaded))
                     save(it)
                 }
                 delay(REFRESH_INTERVAL_MS)

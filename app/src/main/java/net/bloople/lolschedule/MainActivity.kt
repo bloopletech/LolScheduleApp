@@ -14,7 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import java.time.Instant
 import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.time.format.TextStyle
 import java.util.*
 
@@ -108,12 +112,19 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(menuItem: MenuItem): Boolean {
         val tzDescription = ZoneId.systemDefault().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
 
+        val downloaded = model.getLastDownloaded().value?.let {
+            ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault())
+                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
+        } ?: "never"
+
         when(menuItem.itemId) {
             R.id.info -> {
                 AlertDialog.Builder(this)
                     .setTitle("Information")
                     .setMessage("""
                         All times are in your device's local timezone, which is currently ${tzDescription}.
+
+                        Schedule last downloaded $downloaded.
 
                         League of Legends® and LCS® are registered trademarks of Riot Games, Inc.
                         This app is not associated with or sponsored by Riot Games, Inc.

@@ -16,6 +16,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     private val selectedYear: MutableLiveData<Int> = MutableLiveData()
     private val streams: MutableLiveData<List<Stream>> = MutableLiveData()
     private val searchResults: MutableLiveData<List<Match>> = MutableLiveData()
+    private val lastDownloaded: MutableLiveData<Long> = MutableLiveData()
     private val matchesMetadata: MatchesMetadata = MatchesMetadata()
 
     //private val searcher: BooksSearcher = BooksSearcher()
@@ -36,6 +37,10 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 
     fun getSearchResults(): LiveData<List<Match>> {
         return searchResults
+    }
+
+    fun getLastDownloaded(): LiveData<Long> {
+        return lastDownloaded
     }
 
     fun getMatchRevealedVods(): MatchesMetadata {
@@ -92,6 +97,8 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         viewModelScope.launch {
             ScheduleRepository(application).schedules.collect { updatedSchedule ->
                 schedule = updatedSchedule
+
+                lastDownloaded.value = schedule.downloaded
 
                 years.value = schedule.years
 
