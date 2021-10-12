@@ -19,8 +19,6 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import java.time.format.TextStyle
-import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -110,7 +108,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(menuItem: MenuItem): Boolean {
-        val tzDescription = ZoneId.systemDefault().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
+        val tzDescription = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("zzzz"))
 
         val downloaded = model.getLastDownloaded().value?.let {
             ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault())
